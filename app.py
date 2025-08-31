@@ -1,24 +1,51 @@
 import streamlit as st
+import math
 
-# Streamlitアプリの設定
-st.title("シンプルな計算アプリ")
-st.write("以下のフォームに数字を入力してください。")
+# st.title("calc")
+st.markdown("#### 計算機")
+# セッションステートの初期化
+if 'expression' not in st.session_state:
+    st.session_state.expression = ''
 
-# ユーザー入力を受け取る
-number1 = st.number_input("最初の数字を入力してください：", value=0)
-number2 = st.number_input("次の数字を入力してください：", value=0)
+# クリアボタンの処理
+def clear_input():
+    st.session_state.expression = ''
+    st.session_state.expression2 = ''
+    st.session_state.expression3 = ''
 
-# 計算
-result_add = number1 + number2
-result_subtract = number1 - number2
-result_multiply = number1 * number2
-result_divide = None if number2 == 0 else number1 / number2
+# 入力欄とクリアボタン
+st.button("クリア", on_click=clear_input)
+expression = st.text_input("数式を入力してEnterを押してください : ", key='expression')
 
-# 結果を表示
-st.write(f"足し算の結果: {result_add}")
-st.write(f"引き算の結果: {result_subtract}")
-st.write(f"掛け算の結果: {result_multiply}")
-if result_divide is None:
-    st.write("割り算は0では計算できません。")
-else:
-    st.write(f"割り算の結果: {result_divide}")
+
+# piをmath.piに置き換える
+if expression:
+    expression = expression.replace('pi', 'math.pi')
+if expression:
+    expression = expression.replace('sqrt(', 'math.sqrt(')
+
+if expression:
+    try:
+        result = eval(expression)
+        st.write(f"結果: {result}")
+    except Exception as e:
+        st.write(f"エラー: {e}")
+
+# 入力欄とクリアボタン
+expression2 = st.text_input("2進数を10進数に変換します : ", key='expression2')
+if expression2:
+    try:
+        # 2進数文字列を10進数に変換
+        result = int(expression2, 2)
+        st.write(f"10進数: {result}")
+    except Exception as e:
+        st.write(f"エラー: {e}")
+
+expression3 = st.text_input("10進数を2進数に変換します : ", key='expression3')
+if expression3:
+    try:
+        # 10進数を2進数に変換
+        result = bin(int(expression3))
+        st.write(f"2進数: {result}")
+    except Exception as e:
+        st.write(f"エラー: {e}")
